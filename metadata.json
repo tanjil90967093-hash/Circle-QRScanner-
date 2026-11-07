@@ -1,0 +1,6 @@
+{
+  "name": "DocuScan Pro - Smart Document Scanner & Auto-Crop",
+  "description": "Mobile-first smart document scanner with automatic edge detection, perspective auto-crop, shadow removal, and multi-page PDF export.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,69 @@
+name: Build Android APK (DocuScan Pro)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: 📱 Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: 🟢 Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Install NPM Dependencies
+        run: npm install
+
+      - name: 🏗️ Build Web Assets (Vite)
+        run: npm run build
+
+      - name: 🔄 Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: 🔑 Grant Execution Permission for Gradle Wrapper
+        run: chmod +x android/gradlew
+
+      - name: 🚀 Build Android Debug APK
+        run: |
+          cd android
+          ./gradlew assembleDebug --stacktrace
+
+      - name: 📤 Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DocuScan-Pro-v1.0.0-Debug-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+
+      - name: 📝 Post Build Summary
+        run: |
+          echo "### 📱 DocuScan Pro APK Build Succeeded!" >> $GITHUB_STEP_SUMMARY
+          echo "Your Android APK has been successfully built and is ready for download." >> $GITHUB_STEP_SUMMARY
+          echo "- **App Name:** DocuScan Pro" >> $GITHUB_STEP_SUMMARY
+          echo "- **Package Name:** \`com.docuscan.scanner\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version Code:** \`1\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version Name:** \`1.0.0\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Artifact:** [DocuScan-Pro-v1.0.0-Debug-APK](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**How to install on phone:** Download the \`app-debug.apk\` from the Artifacts section above, transfer it to your Android phone, enable 'Install from unknown sources' if prompted, and install." >> $GITHUB_STEP_SUMMARY
