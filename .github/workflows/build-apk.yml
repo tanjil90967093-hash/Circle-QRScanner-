@@ -26,9 +26,6 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: 📱 Set up Android SDK Environment
-        uses: android-actions/setup-android@v3
-
       - name: 📜 Accept Android SDK Licenses
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
@@ -70,6 +67,5 @@ jobs:
           echo "- **Package Name:** \`com.docuscan.scanner\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Version Code:** \`1\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Version Name:** \`1.0.0\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Artifact:** [DocuScan-Pro-v1.0.0-Debug-APK](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**How to install on phone:** Download the \`app-debug.apk\` from the Artifacts section above, transfer it to your Android phone, enable 'Install from unknown sources' if prompted, and install." >> $GITHUB_STEP_SUMMARY
+          echo "**APK Download:** Scroll down to the **Artifacts** section below to download \`DocuScan-Pro-v1.0.0-Debug-APK.zip\`." >> $GITHUB_STEP_SUMMARY
